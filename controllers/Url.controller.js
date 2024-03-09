@@ -1,6 +1,5 @@
 const express = require("express");
-// const nanoID = require("nanoid");
-const { nanoid } = import("nanoid");
+const { v4: uuidv4 } = require("uuid");
 const URL = require("../models/Url");
 const validateUrl = require("../utils/utils");
 require("dotenv").config();
@@ -8,19 +7,19 @@ require("dotenv").config();
 const router = express.Router();
 
 //short URL Generator
-const UrlRouter = router.post("/short-url", async (req, res) => {
-  const origUrl = req.body;
+router.post("/short-url", async (req, res) => {
+  const { origUrl } = req.body;
   const base = process.env.BASE;
 
-  const urlID = nanoid;
-  console.log("original url", origUrl);
+  const urlId = uuidv4();
   if (validateUrl(origUrl)) {
     try {
       let url = await URL.findOne({ origUrl });
       if (url) {
         res.json(url);
       } else {
-        const shortUrl = `${base}/${urlID}`;
+        const shortUrl = `${base}/${urlId}`;
+
         url = new URL({
           origUrl,
           shortUrl,
@@ -36,8 +35,8 @@ const UrlRouter = router.post("/short-url", async (req, res) => {
       res.status(500).json("Server Error");
     }
   } else {
-    res.status(500).json("Invalid Original Url");
+    res.status(400).json("Invalid Original Url");
   }
 });
 
-module.exports = UrlRouter;
+module.exports = router;
