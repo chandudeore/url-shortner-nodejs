@@ -2,16 +2,26 @@ const express = require("express");
 const connectDB = require("./db/db");
 const UrlRouter = require("./controllers/Url.controller");
 const router = require("./controllers/index");
+const path = require("path");
+require("dotenv").config();
 
 const app = express();
+
+const buildPath = path.join(__dirname, "dist");
+
+app.use(express.static(buildPath));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const PORT = process.env.PORT || 8080;
 
-app.get("/", (req, res) => {
-  res.send("Helllo New NodeJS PROJECT");
+app.get("*", (req, res) => {
+  res.sendFile(path.join(buildPath, "index.html"));
 });
+
+// app.get("/", (req, res) => {
+//   res.send("Helllo New NodeJS PROJECT");
+// });
 app.use("/api", UrlRouter);
 app.use("/", router);
 
