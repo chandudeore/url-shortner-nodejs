@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function UrlShort() {
   return (
     <div className="overflow-hidden top-1/2 absolute left-96">
