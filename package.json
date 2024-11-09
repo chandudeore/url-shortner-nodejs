@@ -16,6 +16,7 @@
     "mongoose": "^8.2.1",
     "nodemon": "^3.1.0",
     "path": "^0.12.7",
+    "url-shortner-nodejs": "file:",
     "uuid": "^9.0.1"
   }
 }

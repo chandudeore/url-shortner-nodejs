@@ -11,7 +11,7 @@ router.post("/short-url", async (req, res) => {
   const { origUrl } = req.body;
   const base = process.env.BASE;
 
-  const urlId = uuidv4();
+  const urlId = uuidv4().slice(0, 3);
   if (validateUrl(origUrl)) {
     try {
       let url = await URL.findOne({ origUrl });
@@ -36,6 +36,33 @@ router.post("/short-url", async (req, res) => {
     }
   } else {
     res.status(400).json("Invalid Original Url");
+  }
+});
+
+router.get("/all-urls", async (req, res) => {
+  try {
+    const getAll = await URL.find();
+    return res.status(200).json(getAll);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+router.get("/:urlId", async (req, res) => {
+  try {
+    const url = await URL.findOne({ urlId: req.params.urlId });
+    if (url) {
+      await URL.updateOne(
+        {
+          urlId: req.params.urlId,
+        },
+        { $inc: { clicks: 1 } }
+      );
+      return res.redirect(url.origUrl);
+    } else res.status(404).json("Not found");
+  } catch (err) {
+    console.log(err);
+    res.status(500).json("Server Error");
   }
 });
 
