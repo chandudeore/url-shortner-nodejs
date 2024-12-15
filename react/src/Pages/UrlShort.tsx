@@ -1,6 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { postData } from "../utils/APICalls";
 
+interface UrlResponse {
+  _id: string; // The unique identifier for the record
+  urlId: string; // The shortened identifier for the URL
+  origUrl: string; // The original URL
+  shortUrl: string; // The shortened URL
+  clicks: number; // The number of clicks on the shortened URL
+  date: string; // Human-readable date when the URL was created
+  createdAt: string; // ISO 8601 timestamp for when the record was created
+  updatedAt: string; // ISO 8601 timestamp for the last update
+}
+
 export default function UrlShort() {
   const [file, setFile] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -14,8 +25,8 @@ export default function UrlShort() {
 
   const handleClick = () => {
     postData("short-url", { origUrl: file })
-      .then((res) => {
-        setCopyUrl(res.data.shortUrl);
+      .then((res: UrlResponse) => {
+        setCopyUrl(res.shortUrl);
       })
       .catch((error) => console.log(error));
   };
@@ -35,7 +46,7 @@ export default function UrlShort() {
 
   return (
     <main className="flex flex-col overflow-hidden">
-      <section className="">
+      <section className="my-8">
         <div className="flex flex-col m-auto w-1/2">
           <label
             htmlFor="default-input"

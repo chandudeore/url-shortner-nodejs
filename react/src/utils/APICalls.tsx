@@ -12,7 +12,7 @@ const getData = async (endpoint: string) => {
 const postData = async (endpoint: string, data: unknown) => {
   try {
     const response = await axiosInstance.post(endpoint, data);
-    return response;
+    return response.data;
   } catch (error) {
     return error;
   }
