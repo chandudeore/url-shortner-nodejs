@@ -1,8 +1,11 @@
 import axios from "axios";
 
+// const LOCAL_BASE_URL = "http://localhost:8080/api/";
+const LIVE_BASE_URL = "https://url-shortner-nodejs.onrender.com/api/";
+
 // Create an Axios instance
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8080/api/", // Replace with your API base URL
+  baseURL: LIVE_BASE_URL, // Replace with your API base URL
   headers: {
     "Content-Type": "application/json",
     Authorization: "Bearer YOUR_TOKEN", // Optional: Add token if needed

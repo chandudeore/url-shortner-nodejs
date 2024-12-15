@@ -9,7 +9,7 @@ const router = express.Router();
 //short URL Generator
 router.post("/short-url", async (req, res) => {
   const { origUrl } = req.body;
-  const base = process.env.BASE;
+  const base = process.env.LIVE_BASE;
 
   const urlId = uuidv4().slice(0, 3);
   if (validateUrl(origUrl)) {
