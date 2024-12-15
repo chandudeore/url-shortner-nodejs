@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const connectDB = require("./db/db");
 const UrlRouter = require("./controllers/Url.controller");
 const path = require("path");
@@ -11,7 +12,7 @@ const buildPath = path.join(__dirname, "dist");
 app.use(express.static(buildPath));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
+app.use(cors());
 const PORT = process.env.PORT || 8080;
 
 // app.get("/", (req, res) => {

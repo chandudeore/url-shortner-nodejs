@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an Axios instance
 const axiosInstance = axios.create({
-  baseURL: "https://api.example.com", // Replace with your API base URL
+  baseURL: "http://localhost:8080/api/", // Replace with your API base URL
   headers: {
     "Content-Type": "application/json",
     Authorization: "Bearer YOUR_TOKEN", // Optional: Add token if needed
@@ -13,7 +13,6 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // Add logic before request is sent
-    console.log("Request Sent:", config);
     return config;
   },
   (error) => {

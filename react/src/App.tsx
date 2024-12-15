@@ -5,7 +5,7 @@ import UrlShort from "./Pages/UrlShort";
 
 function App() {
   return (
-    <div className="bg-primary h-[100vh] overflow-hidden">
+    <main className="bg-primary h-screen w-screen overflow-hidden">
       <Navbar />
       <UrlShort />
       {/* <Toaster
@@ -20,7 +20,7 @@ function App() {
           },
         }}
       ></Toaster> */}
-    </div>
+    </main>
   );
 }
 

@@ -1,45 +1,82 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { postData } from "../utils/APICalls";
 
 export default function UrlShort() {
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [copyUrl, setCopyUrl] = useState<string>("");
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   const handleClick = () => {
-    postData("/short-url", file);
+    postData("short-url", { origUrl: file })
+      .then((res) => {
+        setCopyUrl(res.data.shortUrl);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard
+      .writeText(copyUrl)
+      .then(() => {
+        setCopySuccess(true);
+      })
+      .catch(() => {
+        setCopySuccess(false);
+      });
   };
 
   return (
-    <div className="overflow-hidden top-1/2 absolute left-96">
-      <div className="">
-        <div className="flex flex-col justify-center items-center">
-          <div className="mb-6 w-[50vw]">
-            <label
-              htmlFor="default-input"
-              className="block mb-2 text-xl font-medium text-gray-900 dark:text-white"
-            >
-              Paste the URL to be shortened
-            </label>
+    <main className="flex flex-col overflow-hidden">
+      <section className="">
+        <div className="flex flex-col m-auto w-1/2">
+          <label
+            htmlFor="default-input"
+            className="block mb-2 text-xl font-medium text-gray-900 dark:text-white"
+          >
+            Paste the URL to be shortened
+          </label>
+          <div className="flex ">
             <input
               type="text"
               id="default-input"
+              ref={inputRef}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                setFile(event.target.files[0] || null)
+                setFile(event.target.value)
               }
               placeholder="Enter the link here......."
-              className="border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[70%] p-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             />
+            <div className="w-[30%]">
+              <button className="text-xl py-4 w-full" onClick={handleClick}>
+                Shorten URL
+              </button>
+            </div>
           </div>
-          {/* <input
+        </div>
+      </section>
+      <section>
+        <div className="flex w-1/2 m-auto my-20">
+          <input
             type="text"
             placeholder="Enter the link here......."
-            className="border border-solid border-gray-300 p-2 "
-          />{" "} */}
-          <br />
-          <button className="w-[20vw] text-xl" onClick={handleClick}>
-            Shorten URL
-          </button>
+            className="border border-solid border-gray-300 p-4 w-full rounded-lg"
+            value={copyUrl ?? ""}
+          />
+          <div className="">
+            <button className="py-4 px-12" onClick={handleCopy}>
+              {copySuccess ? "COPIED" : "COPY"}
+            </button>
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
